@@ -68,7 +68,7 @@
     "tools:update-api": "node scripts/ghl-mcp.mjs update-api",
     "clean": "rm -rf dist mcp-apps/dist coverage",
     "reset-local": "npm run clean && npm run build",
-    "apps:install": "npm install --prefix mcp-apps",
+    "apps:install": "npm ci --prefix mcp-apps",
     "apps:setup": "npm run apps:install && npm run apps:build",
     "apps:build": "npm run build --prefix mcp-apps",
     "apps:dev": "npm run dev --prefix mcp-apps",
