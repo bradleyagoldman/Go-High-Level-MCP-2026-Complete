@@ -33,6 +33,8 @@ GHL_API_VERSION=2023-02-21
 
 `GHL_API_VERSION=2023-02-21` is the current HighLevel API `Version` header used by official docs. It is not the project year, and it should not be changed to 2026 unless HighLevel publishes a new required API version.
 
+Optional Metricool read tools are documented in [docs/METRICOOL.md](docs/METRICOOL.md).
+
 Then verify live auth:
 
 ```bash

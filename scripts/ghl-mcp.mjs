@@ -384,7 +384,13 @@ GHL_LOCATION_ID=your_location_id
 GHL_BASE_URL=https://services.leadconnectorhq.com
 GHL_API_VERSION=2023-02-21
 MCP_SERVER_PORT=8000
-NODE_ENV=development`);
+NODE_ENV=development
+
+# Optional Metricool read-only API integration.
+METRICOOL_USER_TOKEN=
+METRICOOL_USER_ID=
+METRICOOL_BLOG_ID=
+METRICOOL_BASE_URL=https://app.metricool.com/api`);
 }
 
 function configure(argv) {
@@ -652,10 +658,19 @@ function buildConfig(client, profile, buildOptions = {}) {
           GHL_BASE_URL: process.env.GHL_BASE_URL || 'https://services.leadconnectorhq.com',
           GHL_API_VERSION: process.env.GHL_API_VERSION || '2023-02-21',
           GHL_TOOL_PROFILE: profile,
+          ...optionalMetricoolConfigEnv(),
         },
       },
     },
   };
+}
+
+function optionalMetricoolConfigEnv() {
+  const env = {};
+  for (const key of ['METRICOOL_USER_TOKEN', 'METRICOOL_API_TOKEN', 'METRICOOL_USER_ID', 'METRICOOL_BLOG_ID', 'METRICOOL_BASE_URL']) {
+    if (process.env[key]) env[key] = key.includes('TOKEN') ? `\${${key}}` : process.env[key];
+  }
+  return env;
 }
 
 function writeConfigFile(target, config) {

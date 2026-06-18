@@ -45,6 +45,31 @@ npm run auth-check
 
 If it fails, verify the token has access to the target location.
 
+## Metricool Tools Say Credentials Are Incomplete
+
+Run:
+
+```bash
+GHL_API_KEY=dummy GHL_LOCATION_ID=dummy node scripts/ghl-mcp.mjs test-tool get_metricool_config_status
+```
+
+Then add missing values to `.env`, Railway, or your MCP client environment:
+
+```bash
+METRICOOL_USER_TOKEN=...
+METRICOOL_USER_ID=...
+METRICOOL_BLOG_ID=...
+```
+
+`METRICOOL_BLOG_ID` is required for brand-scoped reads such as scheduled posts and analytics. Use `get_metricool_brands` to list available brand IDs once `METRICOOL_USER_TOKEN` and `METRICOOL_USER_ID` are configured.
+
+## Metricool API Returns 401 Or 403
+
+- Confirm the token is copied from Metricool account settings.
+- Confirm the Metricool plan includes API access.
+- Confirm `METRICOOL_USER_ID` matches the token owner.
+- Confirm `METRICOOL_BLOG_ID` belongs to that user or is shared with that user.
+
 ## Port Conflict
 
 Set:

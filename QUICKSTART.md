@@ -34,6 +34,8 @@ GHL_API_VERSION=2023-02-21
 
 `GHL_API_VERSION=2023-02-21` is the HighLevel API `Version` header, not the project year. Do not change it to 2026 unless HighLevel publishes a new required API version.
 
+Optional Metricool read tools require `METRICOOL_USER_TOKEN`, `METRICOOL_USER_ID`, and usually `METRICOOL_BLOG_ID`; see [docs/METRICOOL.md](docs/METRICOOL.md).
+
 Where to find values:
 
 - API key: HighLevel private integrations or OAuth app credentials.
