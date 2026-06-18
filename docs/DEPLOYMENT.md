@@ -3,7 +3,7 @@
 ## Local Clone
 
 ```bash
-npm install
+npm ci
 npm run build
 npm run start:stdio
 ```

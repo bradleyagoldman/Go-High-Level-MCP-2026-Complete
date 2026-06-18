@@ -18,7 +18,7 @@ Install, build, validate, and generate MCP client config for the GoHighLevel MCP
 ## Minimum Setup
 
 ```bash
-npm install
+npm ci
 cp .env.example .env
 npm run build
 npm run doctor

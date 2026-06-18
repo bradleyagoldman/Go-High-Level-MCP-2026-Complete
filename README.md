@@ -15,7 +15,7 @@ Requirements:
 - A GoHighLevel Location ID
 
 ```bash
-npm install
+npm ci
 cp .env.example .env
 npm run build
 npm run doctor

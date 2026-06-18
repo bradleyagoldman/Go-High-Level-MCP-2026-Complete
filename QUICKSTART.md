@@ -13,7 +13,7 @@ If your repo path contains spaces or apostrophes, quote paths in shell commands.
 ## Install
 
 ```bash
-npm install
+npm ci
 cp .env.example .env
 npm run build
 npm run doctor
