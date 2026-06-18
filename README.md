@@ -75,6 +75,16 @@ node scripts/ghl-mcp.mjs configure codex --profile full
 node scripts/ghl-mcp.mjs configure codex --profile curated --json
 ```
 
+Metricool social analytics and scheduler-read tools require the `stable`, `full`, or `raw` profile plus Metricool credentials:
+
+```bash
+METRICOOL_USER_TOKEN=your_metricool_user_token
+METRICOOL_USER_ID=your_metricool_user_id
+METRICOOL_BLOG_ID=your_metricool_brand_blog_id
+```
+
+Use `get_metricool_config_status` first, then `get_metricool_brands` or `get_metricool_scheduled_posts` to confirm live data is flowing before relying on analytics or scheduler state.
+
 ## Tool Profiles
 
 - `curated` - recommended for agents; high-level CRM workflows with confirmation queues.

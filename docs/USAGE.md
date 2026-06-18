@@ -53,6 +53,23 @@ npm run explain-error -- "Location is not active"
 - Workflows: prepare safe workflow enrollment.
 - Media: list and upload media where supported.
 - Location health: inspect users, locations, setup health, and operational gaps.
+- Metricool: check Metricool credential status, list brands, read scheduled posts, and fetch allowed analytics endpoints.
+
+## Metricool Social Intelligence
+
+Metricool tools are available in the `stable`, `full`, and `raw` profiles after setting `METRICOOL_USER_TOKEN`, `METRICOOL_USER_ID`, and usually `METRICOOL_BLOG_ID`.
+
+Recommended live-read sequence:
+
+```bash
+npm run build
+node scripts/ghl-mcp.mjs test-tool get_metricool_config_status
+node scripts/ghl-mcp.mjs test-tool get_metricool_brands
+node scripts/ghl-mcp.mjs test-tool get_metricool_scheduled_posts '{"start":"2026-06-01","end":"2026-06-30","timezone":"America/Los_Angeles"}'
+node scripts/ghl-mcp.mjs test-tool get_metricool_timeline_analytics '{"metric":"igFollowers","start":"2026-06-01","end":"2026-06-30"}'
+```
+
+The generic `get_metricool_read_endpoint` tool is intentionally limited to known read prefixes: `/admin/simpleProfiles`, `/stats/`, `/v2/analytics/`, and `/v2/scheduler/posts`.
 
 ## High-Level Agent Tools
 

@@ -959,14 +959,17 @@ export class SocialMediaTools {
     return {
       success: true,
       configured: Boolean(userToken && userId),
+      configuredForBrandReads: Boolean(userToken && userId && blogId),
       hasUserToken: Boolean(userToken),
       hasUserId: Boolean(userId),
       hasDefaultBlogId: Boolean(blogId),
       baseUrl,
       requiredEnv: ['METRICOOL_USER_TOKEN', 'METRICOOL_USER_ID'],
       optionalEnv: ['METRICOOL_BLOG_ID', 'METRICOOL_BASE_URL'],
-      message: userToken && userId
-        ? 'Metricool read API credentials are configured'
+      message: userToken && userId && blogId
+        ? 'Metricool read API credentials are configured for brand-level reads'
+        : userToken && userId
+        ? 'Metricool user credentials are configured; set METRICOOL_BLOG_ID or pass blogId for brand-level reads'
         : 'Metricool read API credentials are incomplete'
     };
   }

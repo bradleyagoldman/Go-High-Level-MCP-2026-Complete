@@ -383,6 +383,10 @@ function envTemplate() {
 GHL_LOCATION_ID=your_location_id
 GHL_BASE_URL=https://services.leadconnectorhq.com
 GHL_API_VERSION=2023-02-21
+METRICOOL_USER_TOKEN=your_metricool_user_token_optional
+METRICOOL_USER_ID=your_metricool_user_id_optional
+METRICOOL_BLOG_ID=your_metricool_blog_id_optional
+METRICOOL_BASE_URL=https://app.metricool.com/api
 MCP_SERVER_PORT=8000
 NODE_ENV=development`);
 }
@@ -652,6 +656,10 @@ function buildConfig(client, profile, buildOptions = {}) {
           GHL_BASE_URL: process.env.GHL_BASE_URL || 'https://services.leadconnectorhq.com',
           GHL_API_VERSION: process.env.GHL_API_VERSION || '2023-02-21',
           GHL_TOOL_PROFILE: profile,
+          METRICOOL_USER_TOKEN: '${METRICOOL_USER_TOKEN}',
+          METRICOOL_USER_ID: buildOptions.inlineEnv ? (process.env.METRICOOL_USER_ID || '${METRICOOL_USER_ID}') : '${METRICOOL_USER_ID}',
+          METRICOOL_BLOG_ID: buildOptions.inlineEnv ? (process.env.METRICOOL_BLOG_ID || '${METRICOOL_BLOG_ID}') : '${METRICOOL_BLOG_ID}',
+          METRICOOL_BASE_URL: process.env.METRICOOL_BASE_URL || 'https://app.metricool.com/api',
         },
       },
     },

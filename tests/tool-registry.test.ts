@@ -44,6 +44,7 @@ describe('ToolRegistry profiles', () => {
     expect(names).toContain('crm_prepare_lead_intake');
     expect(names).toContain('crm_prepare_appointment_booking');
     expect(names).not.toContain('search_contacts');
+    expect(names).not.toContain('get_metricool_config_status');
     expect(await registry.callTool('search_contacts', {})).toBeUndefined();
     expect(await registry.callTool('crm_list_workspaces', {})).toBeDefined();
   });
@@ -144,6 +145,7 @@ describe('ToolRegistry profiles', () => {
     expect(names).toContain('search_contacts');
     expect(names).toContain('official_ad_manager_fb_get_reporting');
     expect(names).toContain('crm_prepare_lead_intake');
+    expect(names).toContain('get_metricool_config_status');
     expect(inventory.some((tool) => tool.stability === 'deprecated')).toBe(false);
     expect(inventory.some((tool) => tool.stability === 'private-or-unstable')).toBe(false);
   });

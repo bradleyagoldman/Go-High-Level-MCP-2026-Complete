@@ -6,6 +6,8 @@
 - `official`: official OpenAPI and live-docs supplemental tools.
 - `raw`: endpoint-level tools only.
 
+Metricool social analytics and scheduler-read tools are exposed by `stable`, `full`, and `raw`. They are not part of `curated`, which is reserved for high-level CRM workflows.
+
 Examples:
 
 ```bash
