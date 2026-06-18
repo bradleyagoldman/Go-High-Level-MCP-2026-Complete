@@ -9,9 +9,9 @@ Generated from official GHL docs commit: ae4d260
 - Official endpoints parsed: 590
 - Official endpoints covered: 590
 - Coverage: 100%
-- MCP tools in registry: 848
-- Read tools: 419
-- Write tools: 321
+- MCP tools in registry: 864
+- Read tools: 428
+- Write tools: 328
 - Delete/destructive tools: 108
 - Local-only endpoint references tracked: 253
 
@@ -19,7 +19,7 @@ Generated from official GHL docs commit: ae4d260
 
 - Official OpenAPI tools: 237
 - Live-docs supplemental tools: 14
-- Legacy-compatible tools: 486
+- Legacy-compatible tools: 502
 - Private/internal unstable tools: 87
 - Deprecated/compatibility tools: 24
 
@@ -28,9 +28,9 @@ Generated from official GHL docs commit: ae4d260
 | Category | Tools |
 | --- | ---: |
 | official-ad-manager | 94 |
+| agent-workspace | 43 |
 | calendar | 39 |
 | courses | 32 |
-| agent-workspace | 32 |
 | contacts | 31 |
 | locations | 27 |
 | official-social-media-posting | 24 |

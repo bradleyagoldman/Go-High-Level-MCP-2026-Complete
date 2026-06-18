@@ -2889,6 +2889,85 @@
       "stability": "legacy-compatible"
     },
     {
+      "name": "get_metricool_config_status",
+      "module": "socialMedia",
+      "description": "Check whether Metricool read API credentials are configured without exposing secret values",
+      "category": "metricool",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [],
+      "scopes": [],
+      "source": "metricool-api",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "get_metricool_brands",
+      "module": "socialMedia",
+      "description": "Get Metricool brands/profiles available to the configured Metricool user",
+      "category": "metricool",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [],
+      "scopes": [],
+      "source": "metricool-api",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "get_metricool_scheduled_posts",
+      "module": "socialMedia",
+      "description": "Get scheduled Metricool posts for a brand in a date range",
+      "category": "metricool",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [
+        "start",
+        "end"
+      ],
+      "scopes": [],
+      "source": "metricool-api",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "get_metricool_timeline_analytics",
+      "module": "socialMedia",
+      "description": "Get Metricool timeline analytics for a metric such as igFollowers",
+      "category": "metricool",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [
+        "metric",
+        "start",
+        "end"
+      ],
+      "scopes": [],
+      "source": "metricool-api",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "get_metricool_read_endpoint",
+      "module": "socialMedia",
+      "description": "Run a GET request against an allowed Metricool read endpoint for analytics exploration",
+      "category": "metricool",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [
+        "endpoint"
+      ],
+      "scopes": [],
+      "source": "metricool-api",
+      "stability": "legacy-compatible"
+    },
+    {
       "name": "get_media_files",
       "module": "media",
       "description": "Get list of files and folders from the media library with filtering and search capabilities",
@@ -14132,6 +14211,78 @@
       "stability": "legacy-compatible"
     },
     {
+      "name": "crm_location_overview",
+      "module": "agentWorkspace",
+      "description": "Gather one compact, read-only operating overview for a GHL location: location profile, contacts, pipelines, calendars, products, and email activity.",
+      "category": "agent-workspace",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "crm_daily_briefing",
+      "module": "agentWorkspace",
+      "description": "Build a read-only daily operating briefing from recent contacts, opportunities, calendars, reviews, and email activity.",
+      "category": "agent-workspace",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "crm_search_everything",
+      "module": "agentWorkspace",
+      "description": "Search across contacts, conversations, opportunities, calendars, and products from one agent-friendly tool.",
+      "category": "agent-workspace",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "crm_get_next_page",
+      "module": "agentWorkspace",
+      "description": "Prepare the next read call for paginated tools without requiring the agent to remember cursor or searchAfter details.",
+      "category": "agent-workspace",
+      "access": "read",
+      "destructive": false,
+      "readOnly": true,
+      "idempotent": true,
+      "required": [],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "crm_next_best_actions",
+      "module": "agentWorkspace",
+      "description": "Prepare a prioritized set of safe next actions from CRM context: follow-up task, note, message draft, and optional workflow enrollment.",
+      "category": "agent-workspace",
+      "access": "write",
+      "destructive": false,
+      "readOnly": false,
+      "idempotent": false,
+      "required": [
+        "contactId"
+      ],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
       "name": "crm_prepare_contact_update",
       "module": "agentWorkspace",
       "description": "Prepare a confirmation-gated contact update with duplicate checks, notes, tags, and follow-up task options.",
@@ -14141,6 +14292,22 @@
       "readOnly": false,
       "idempotent": false,
       "required": [],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "crm_prepare_contact_followup",
+      "module": "agentWorkspace",
+      "description": "Prepare a contact follow-up bundle: context read, note, task, and optional SMS/email draft.",
+      "category": "agent-workspace",
+      "access": "write",
+      "destructive": false,
+      "readOnly": false,
+      "idempotent": false,
+      "required": [
+        "contactId"
+      ],
       "scopes": [],
       "source": "curated-agent-workspace",
       "stability": "legacy-compatible"
@@ -14225,6 +14392,22 @@
       "stability": "legacy-compatible"
     },
     {
+      "name": "crm_prepare_lead_reactivation",
+      "module": "agentWorkspace",
+      "description": "Prepare a dormant lead reactivation plan with tag, note, task, optional message, and optional workflow enrollment.",
+      "category": "agent-workspace",
+      "access": "write",
+      "destructive": false,
+      "readOnly": false,
+      "idempotent": false,
+      "required": [
+        "contactId"
+      ],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
       "name": "crm_conversation_workspace",
       "module": "agentWorkspace",
       "description": "Gather conversation threads, recent messages, and optional contact context for reply drafting.",
@@ -14273,6 +14456,22 @@
       "stability": "legacy-compatible"
     },
     {
+      "name": "crm_prepare_missed_call_response",
+      "module": "agentWorkspace",
+      "description": "Prepare a missed-call response with contact context, SMS draft, note, and follow-up task.",
+      "category": "agent-workspace",
+      "access": "write",
+      "destructive": false,
+      "readOnly": false,
+      "idempotent": false,
+      "required": [
+        "contactId"
+      ],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
       "name": "crm_pipeline_workspace",
       "module": "agentWorkspace",
       "description": "Gather pipeline, opportunity, and stale-deal context for a pipeline board.",
@@ -14310,6 +14509,22 @@
       "readOnly": false,
       "idempotent": false,
       "required": [],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "crm_prepare_pipeline_cleanup",
+      "module": "agentWorkspace",
+      "description": "Prepare cleanup actions for stale pipeline opportunities: context read, stage/status update, notes, and follow-up tasks.",
+      "category": "agent-workspace",
+      "access": "write",
+      "destructive": false,
+      "readOnly": false,
+      "idempotent": false,
+      "required": [
+        "opportunityId"
+      ],
       "scopes": [],
       "source": "curated-agent-workspace",
       "stability": "legacy-compatible"
@@ -14459,6 +14674,22 @@
       "stability": "legacy-compatible"
     },
     {
+      "name": "crm_prepare_review_request_batch",
+      "module": "agentWorkspace",
+      "description": "Prepare review requests for multiple contacts with one confirmation-gated batch plan.",
+      "category": "agent-workspace",
+      "access": "write",
+      "destructive": false,
+      "readOnly": false,
+      "idempotent": false,
+      "required": [
+        "contactIds"
+      ],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
       "name": "crm_ads_workspace",
       "module": "agentWorkspace",
       "description": "Gather ads, attribution, funnel, conversion, and setup health reporting.",
@@ -14514,6 +14745,23 @@
       "readOnly": false,
       "idempotent": false,
       "required": [
+        "contactId"
+      ],
+      "scopes": [],
+      "source": "curated-agent-workspace",
+      "stability": "legacy-compatible"
+    },
+    {
+      "name": "crm_prepare_invoice_followup",
+      "module": "agentWorkspace",
+      "description": "Prepare an invoice follow-up with invoice context, contact note, task, and optional SMS/email reminder.",
+      "category": "agent-workspace",
+      "access": "write",
+      "destructive": false,
+      "readOnly": false,
+      "idempotent": false,
+      "required": [
+        "invoiceId",
         "contactId"
       ],
       "scopes": [],
