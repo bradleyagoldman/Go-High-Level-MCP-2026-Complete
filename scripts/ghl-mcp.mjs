@@ -79,7 +79,7 @@ Options:
   --inline-env               Inline non-secret env values in generated config; keeps API key placeholder
   --fix                      Apply safe local fixes such as creating .env from .env.example
   --ci                       Non-interactive CI-friendly mode
-  --no-network               Avoid network checks such as auth-check and npm install
+  --no-network               Avoid network checks such as auth-check and dependency install
   --search <text>            Filter list-tools output
   --category <name>          Filter list-tools output by category/module
   --access <name>            Filter list-tools output by read, write, or delete
@@ -107,7 +107,7 @@ function getDoctorResult() {
   const pkg = readJson('package.json');
   const coverage = readCoverage();
   const checks = [
-    check('Node >= 20', Number(process.versions.node.split('.')[0]) >= 20, process.version, 'Install Node 20 or newer, then rerun npm install.'),
+    check('Node >= 20', Number(process.versions.node.split('.')[0]) >= 20, process.version, 'Install Node 20 or newer, then rerun npm ci.'),
     check('package.json', Boolean(pkg.name), pkg.name || 'missing'),
     check('dist/server.js', existsSync(join(repoRoot, 'dist/server.js')), existsSync(join(repoRoot, 'dist/server.js')) ? 'present' : 'run npm run build', 'Run npm run build from the repo root.'),
     check('dist/main.js', existsSync(join(repoRoot, 'dist/main.js')), existsSync(join(repoRoot, 'dist/main.js')) ? 'present' : 'run npm run build', 'Run npm run build from the repo root.'),
@@ -170,7 +170,7 @@ async function setup(argv) {
   }
 
   if (!options.noNetwork && !existsSync(join(repoRoot, 'node_modules'))) {
-    runStep('npm install', ['npm', ['install']], actions);
+    runStep('npm ci', ['npm', ['ci']], actions);
   }
   runStep('npm run build', ['npm', ['run', 'build']], actions);
   if (options.withApps) {
@@ -281,7 +281,7 @@ async function buildAgentCheckPayload(options) {
   steps.push(stepResult('dependencies', existsSync(join(repoRoot, 'node_modules')) || options.noNetwork, existsSync(join(repoRoot, 'node_modules')) ? 'node_modules present' : options.noNetwork ? 'skipped because --no-network was set' : 'node_modules missing'));
 
   if (!options.noNetwork && !existsSync(join(repoRoot, 'node_modules'))) {
-    steps.push(runCheckStep('npm install', 'npm', ['install']));
+    steps.push(runCheckStep('npm ci', 'npm', ['ci']));
   }
   steps.push(runCheckStep('npm run build', 'npm', ['run', 'build']));
   steps.push(runCheckStep('npm run lint', 'npm', ['run', 'lint']));
@@ -724,7 +724,7 @@ function explainErrorMessage(message) {
     return {
       code: 'unsupported-node',
       meaning: 'This repo expects Node 20 or newer.',
-      nextSteps: ['Install Node 20+.', 'Run npm install again after switching Node versions.'],
+      nextSteps: ['Install Node 20+.', 'Run npm ci again after switching Node versions.'],
     };
   }
   return {

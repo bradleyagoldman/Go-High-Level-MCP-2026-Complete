@@ -5,7 +5,7 @@ Use Node 20+ for both the core server and MCP Apps.
 ## Standard Setup
 
 ```bash
-npm install
+npm ci
 cp .env.example .env
 npm run build
 npm run doctor
