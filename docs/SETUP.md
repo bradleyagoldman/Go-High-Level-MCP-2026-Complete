@@ -33,6 +33,17 @@ OPENAI_API_KEY=your_openai_key_here_optional
 
 `GHL_API_VERSION=2023-02-21` is the HighLevel API `Version` header. It is not the project year.
 
+Metricool read tools are optional. To enable them, add:
+
+```bash
+METRICOOL_USER_TOKEN=your_metricool_api_token
+METRICOOL_USER_ID=your_metricool_user_id
+METRICOOL_BLOG_ID=your_default_metricool_brand_blog_id
+METRICOOL_BASE_URL=https://app.metricool.com/api
+```
+
+See [METRICOOL.md](METRICOOL.md) for live verification commands.
+
 ## Modes
 
 - No credentials: build, test, list tools, and generate placeholder MCP config.

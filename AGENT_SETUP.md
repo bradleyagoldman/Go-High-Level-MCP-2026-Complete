@@ -14,6 +14,7 @@ Install, build, validate, and generate MCP client config for the GoHighLevel MCP
 - Do not change `GHL_API_VERSION=2023-02-21` to 2026. It is the HighLevel API `Version` header, not the project year.
 - Use `GHL_TOOL_PROFILE=curated` by default.
 - Stop and ask the human for missing `GHL_API_KEY`, missing `GHL_LOCATION_ID`, invalid auth, or an unsupported MCP client.
+- Treat Metricool as optional. If requested, ask for `METRICOOL_USER_TOKEN`, `METRICOOL_USER_ID`, and `METRICOOL_BLOG_ID`; never print the token.
 
 ## Minimum Setup
 
@@ -89,6 +90,7 @@ Report:
 - Auth status, if credentials were provided.
 - MCP client config generated.
 - Tool profile used.
+- Metricool config status, if Metricool was requested.
 - Remaining human actions.
 - Confirmation that no write/destructive tools were run.
 - Confirmation that no full secrets were printed.

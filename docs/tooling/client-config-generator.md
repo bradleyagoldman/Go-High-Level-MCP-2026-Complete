@@ -17,6 +17,9 @@ Use environment variables already understood by the server:
 | `GHL_LOCATION_ID` | Yes | Default location ID supplied to tools that accept `locationId`. |
 | `GHL_BASE_URL` | No | Defaults to `https://services.leadconnectorhq.com`. |
 | `GHL_API_VERSION` | No | Defaults to `2023-02-21`. |
+| `METRICOOL_USER_TOKEN` | No | Enables optional Metricool read tools. |
+| `METRICOOL_USER_ID` | No | Metricool user ID for optional Metricool read tools. |
+| `METRICOOL_BLOG_ID` | No | Default Metricool brand/blog ID for brand-scoped reads. |
 
 ## Recommended Outputs
 
