@@ -358,6 +358,12 @@ export class ToolRegistry {
     try {
       const tools = getTools();
       for (const tool of tools) {
+        const existingIndex = this.allToolDefs.findIndex((item) => item.name === tool.name);
+        if (existingIndex >= 0) {
+          this.allToolDefs[existingIndex] = tool;
+          this.toolToModule.set(tool.name, mod);
+          continue;
+        }
         this.toolToModule.set(tool.name, mod);
         this.allToolDefs.push(tool);
       }
@@ -430,7 +436,9 @@ export class ToolRegistry {
     const counts: Record<string, number> = {};
     for (const mod of this.modules) {
       try {
-        counts[mod.name] = mod.getTools().filter((tool) => this.isToolVisible(tool.name)).length;
+        counts[mod.name] = mod.getTools().filter((tool) =>
+          this.toolToModule.get(tool.name) === mod && this.isToolVisible(tool.name)
+        ).length;
       } catch {
         counts[mod.name] = 0;
       }
