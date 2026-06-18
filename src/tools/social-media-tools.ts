@@ -1,4 +1,5 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
+import axios, { AxiosError } from 'axios';
 import { GHLApiClient } from '../clients/ghl-api-client.js';
 import {
   MCPSearchPostsParams,
@@ -24,6 +25,27 @@ import {
   MCPGetOAuthAccountsParams,
   MCPAttachOAuthAccountParams
 } from '../types/ghl-types.js';
+
+type MetricoolAuthParams = {
+  userToken?: string;
+  userId?: string;
+  blogId?: string;
+};
+
+type MetricoolConfig = Required<Pick<MetricoolAuthParams, 'userToken' | 'userId'>> & {
+  blogId?: string;
+  baseUrl: string;
+};
+
+type MetricoolQueryParams = Record<string, string | number | boolean | undefined>;
+
+const METRICOOL_DEFAULT_BASE_URL = 'https://app.metricool.com/api';
+const METRICOOL_ALLOWED_READ_PREFIXES = [
+  '/admin/simpleProfiles',
+  '/stats/',
+  '/v2/analytics/',
+  '/v2/scheduler/posts'
+];
 
 export class SocialMediaTools {
   constructor(private ghlClient: GHLApiClient) {}
@@ -506,6 +528,130 @@ export class SocialMediaTools {
             complexity: "simple"
           }
         }
+      },
+
+      // Metricool Read Tools
+      {
+        name: 'get_metricool_config_status',
+        description: 'Check whether Metricool read API credentials are configured without exposing secret values',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+          additionalProperties: false
+        },
+        _meta: {
+          labels: {
+            category: "metricool",
+            access: "read",
+            complexity: "simple",
+            source: "metricool-api"
+          }
+        }
+      },
+      {
+        name: 'get_metricool_brands',
+        description: 'Get Metricool brands/profiles available to the configured Metricool user',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            userId: { type: 'string', description: 'Metricool user ID. Defaults to METRICOOL_USER_ID.' },
+            blogId: { type: 'string', description: 'Optional Metricool blog/brand ID filter. Defaults to METRICOOL_BLOG_ID when set.' },
+            userToken: { type: 'string', description: 'Metricool API token. Defaults to METRICOOL_USER_TOKEN or METRICOOL_API_TOKEN.' }
+          },
+          additionalProperties: false
+        },
+        _meta: {
+          labels: {
+            category: "metricool",
+            access: "read",
+            complexity: "simple",
+            source: "metricool-api"
+          }
+        }
+      },
+      {
+        name: 'get_metricool_scheduled_posts',
+        description: 'Get scheduled Metricool posts for a brand in a date range',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            start: { type: 'string', description: 'Start date in YYYY-MM-DD format' },
+            end: { type: 'string', description: 'End date in YYYY-MM-DD format' },
+            timezone: { type: 'string', description: 'IANA timezone for the planner range', default: 'UTC' },
+            extendedRange: { type: 'boolean', description: 'Expand the planner search range by one day on each side', default: false },
+            userId: { type: 'string', description: 'Metricool user ID. Defaults to METRICOOL_USER_ID.' },
+            blogId: { type: 'string', description: 'Metricool brand/blog ID. Defaults to METRICOOL_BLOG_ID.' },
+            userToken: { type: 'string', description: 'Metricool API token. Defaults to METRICOOL_USER_TOKEN or METRICOOL_API_TOKEN.' }
+          },
+          required: ['start', 'end'],
+          additionalProperties: false
+        },
+        _meta: {
+          labels: {
+            category: "metricool",
+            access: "read",
+            complexity: "simple",
+            source: "metricool-api"
+          }
+        }
+      },
+      {
+        name: 'get_metricool_timeline_analytics',
+        description: 'Get Metricool timeline analytics for a metric such as igFollowers',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            metric: { type: 'string', description: 'Metricool timeline metric name, for example igFollowers' },
+            start: { type: 'string', description: 'Start date/time accepted by Metricool, for example YYYY-MM-DD or ISO' },
+            end: { type: 'string', description: 'End date/time accepted by Metricool, for example YYYY-MM-DD or ISO' },
+            userId: { type: 'string', description: 'Metricool user ID. Defaults to METRICOOL_USER_ID.' },
+            blogId: { type: 'string', description: 'Metricool brand/blog ID. Defaults to METRICOOL_BLOG_ID.' },
+            userToken: { type: 'string', description: 'Metricool API token. Defaults to METRICOOL_USER_TOKEN or METRICOOL_API_TOKEN.' }
+          },
+          required: ['metric', 'start', 'end'],
+          additionalProperties: false
+        },
+        _meta: {
+          labels: {
+            category: "metricool",
+            access: "read",
+            complexity: "simple",
+            source: "metricool-api"
+          }
+        }
+      },
+      {
+        name: 'get_metricool_read_endpoint',
+        description: 'Run a GET request against an allowed Metricool read endpoint for analytics exploration',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            endpoint: {
+              type: 'string',
+              description: 'Metricool API path. Allowed prefixes: /admin/simpleProfiles, /stats/, /v2/analytics/, /v2/scheduler/posts.'
+            },
+            query: {
+              type: 'object',
+              description: 'Additional query parameters to pass through to Metricool',
+              additionalProperties: {
+                anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }]
+              }
+            },
+            userId: { type: 'string', description: 'Metricool user ID. Defaults to METRICOOL_USER_ID.' },
+            blogId: { type: 'string', description: 'Metricool brand/blog ID. Defaults to METRICOOL_BLOG_ID.' },
+            userToken: { type: 'string', description: 'Metricool API token. Defaults to METRICOOL_USER_TOKEN or METRICOOL_API_TOKEN.' }
+          },
+          required: ['endpoint'],
+          additionalProperties: false
+        },
+        _meta: {
+          labels: {
+            category: "metricool",
+            access: "read",
+            complexity: "advanced",
+            source: "metricool-api"
+          }
+        }
       }
     ];
   }
@@ -545,6 +691,16 @@ export class SocialMediaTools {
           return await this.getSocialMediaStatistics(args);
         case 'set_social_media_accounts':
           return await this.setSocialMediaAccounts(args);
+        case 'get_metricool_config_status':
+          return this.getMetricoolConfigStatus();
+        case 'get_metricool_brands':
+          return await this.getMetricoolBrands(args);
+        case 'get_metricool_scheduled_posts':
+          return await this.getMetricoolScheduledPosts(args);
+        case 'get_metricool_timeline_analytics':
+          return await this.getMetricoolTimelineAnalytics(args);
+        case 'get_metricool_read_endpoint':
+          return await this.getMetricoolReadEndpoint(args);
         default:
           throw new Error(`Unknown tool: ${name}`);
       }
@@ -790,5 +946,228 @@ export class SocialMediaTools {
       result: response.data,
       message: `Social media accounts set for location ${params.locationId}`
     };
+  }
+
+  private getMetricoolConfigStatus() {
+    const userToken = this.getMetricoolEnv('METRICOOL_USER_TOKEN') ||
+      this.getMetricoolEnv('METRICOOL_API_TOKEN') ||
+      this.getMetricoolEnv('METRICOOL_TOKEN');
+    const userId = this.getMetricoolEnv('METRICOOL_USER_ID');
+    const blogId = this.getMetricoolEnv('METRICOOL_BLOG_ID');
+    const baseUrl = this.getMetricoolBaseUrl();
+
+    return {
+      success: true,
+      configured: Boolean(userToken && userId),
+      hasUserToken: Boolean(userToken),
+      hasUserId: Boolean(userId),
+      hasDefaultBlogId: Boolean(blogId),
+      baseUrl,
+      requiredEnv: ['METRICOOL_USER_TOKEN', 'METRICOOL_USER_ID'],
+      optionalEnv: ['METRICOOL_BLOG_ID', 'METRICOOL_BASE_URL'],
+      message: userToken && userId
+        ? 'Metricool read API credentials are configured'
+        : 'Metricool read API credentials are incomplete'
+    };
+  }
+
+  private async getMetricoolBrands(params: MetricoolAuthParams) {
+    const data = await this.metricoolGet('/admin/simpleProfiles', params, {}, false);
+
+    return {
+      success: true,
+      brands: data,
+      count: Array.isArray(data) ? data.length : undefined,
+      message: 'Metricool brands retrieved successfully'
+    };
+  }
+
+  private async getMetricoolScheduledPosts(params: MetricoolAuthParams & {
+    start: string;
+    end: string;
+    timezone?: string;
+    extendedRange?: boolean;
+  }) {
+    this.requireMetricoolParam(params.start, 'start');
+    this.requireMetricoolParam(params.end, 'end');
+
+    const data = await this.metricoolGet('/v2/scheduler/posts', params, {
+      integrationSource: 'MCP',
+      start: this.normalizeMetricoolStart(params.start),
+      end: this.normalizeMetricoolEnd(params.end),
+      timezone: params.timezone || 'UTC',
+      extendedRange: params.extendedRange ?? false
+    });
+
+    return {
+      success: true,
+      scheduledPosts: data,
+      count: Array.isArray(data) ? data.length : undefined,
+      message: 'Metricool scheduled posts retrieved successfully'
+    };
+  }
+
+  private async getMetricoolTimelineAnalytics(params: MetricoolAuthParams & {
+    metric: string;
+    start: string;
+    end: string;
+  }) {
+    this.requireMetricoolParam(params.metric, 'metric');
+    this.requireMetricoolParam(params.start, 'start');
+    this.requireMetricoolParam(params.end, 'end');
+    if (params.metric.includes('/') || params.metric.includes('?')) {
+      throw new Error('Metricool metric must be a single path segment, for example igFollowers');
+    }
+
+    const data = await this.metricoolGet(`/stats/timeling/${encodeURIComponent(params.metric)}`, params, {
+      start: params.start,
+      end: params.end
+    });
+
+    return {
+      success: true,
+      metric: params.metric,
+      analytics: data,
+      message: `Metricool timeline analytics retrieved for ${params.metric}`
+    };
+  }
+
+  private async getMetricoolReadEndpoint(params: MetricoolAuthParams & {
+    endpoint: string;
+    query?: MetricoolQueryParams;
+  }) {
+    this.requireMetricoolParam(params.endpoint, 'endpoint');
+    const endpoint = this.normalizeMetricoolReadEndpoint(params.endpoint);
+    const requireBlogId = endpoint !== '/admin/simpleProfiles';
+    const data = await this.metricoolGet(endpoint, params, params.query || {}, requireBlogId);
+
+    return {
+      success: true,
+      endpoint,
+      data,
+      message: `Metricool read endpoint ${endpoint} retrieved successfully`
+    };
+  }
+
+  private async metricoolGet(
+    endpoint: string,
+    authParams: MetricoolAuthParams,
+    queryParams: MetricoolQueryParams = {},
+    requireBlogId = true
+  ) {
+    const config = this.getMetricoolConfig(authParams, requireBlogId);
+    const query: MetricoolQueryParams = {
+      ...this.cleanMetricoolQuery(queryParams),
+      userId: config.userId
+    };
+    if (config.blogId) query.blogId = config.blogId;
+
+    try {
+      process.stderr.write(`[Metricool API] GET ${endpoint}\n`);
+      const response = await axios.get(`${config.baseUrl}${endpoint}`, {
+        params: query,
+        headers: {
+          'X-Mc-Auth': config.userToken,
+          'Accept': 'application/json'
+        },
+        timeout: 30000
+      });
+      return response.data;
+    } catch (error) {
+      throw this.formatMetricoolError(error);
+    }
+  }
+
+  private getMetricoolConfig(params: MetricoolAuthParams = {}, requireBlogId = true): MetricoolConfig {
+    const userToken = params.userToken ||
+      this.getMetricoolEnv('METRICOOL_USER_TOKEN') ||
+      this.getMetricoolEnv('METRICOOL_API_TOKEN') ||
+      this.getMetricoolEnv('METRICOOL_TOKEN');
+    const userId = params.userId || this.getMetricoolEnv('METRICOOL_USER_ID');
+    const blogId = params.blogId || this.getMetricoolEnv('METRICOOL_BLOG_ID');
+
+    if (!userToken) {
+      throw new Error('Metricool user token is required. Set METRICOOL_USER_TOKEN or pass userToken.');
+    }
+    if (!userId) {
+      throw new Error('Metricool user ID is required. Set METRICOOL_USER_ID or pass userId.');
+    }
+    if (requireBlogId && !blogId) {
+      throw new Error('Metricool blog ID is required. Set METRICOOL_BLOG_ID or pass blogId.');
+    }
+
+    return {
+      userToken,
+      userId,
+      blogId,
+      baseUrl: this.getMetricoolBaseUrl()
+    };
+  }
+
+  private getMetricoolBaseUrl(): string {
+    return (this.getMetricoolEnv('METRICOOL_BASE_URL') || METRICOOL_DEFAULT_BASE_URL).replace(/\/+$/, '');
+  }
+
+  private getMetricoolEnv(name: string): string | undefined {
+    const value = process.env[name]?.trim();
+    return value || undefined;
+  }
+
+  private cleanMetricoolQuery(query: MetricoolQueryParams): MetricoolQueryParams {
+    return Object.fromEntries(
+      Object.entries(query).filter(([, value]) => value !== undefined && value !== '')
+    ) as MetricoolQueryParams;
+  }
+
+  private normalizeMetricoolStart(value: string): string {
+    return value.includes('T') ? value : `${value}T00:00:00`;
+  }
+
+  private normalizeMetricoolEnd(value: string): string {
+    return value.includes('T') ? value : `${value}T23:59:59`;
+  }
+
+  private normalizeMetricoolReadEndpoint(endpoint: string): string {
+    if (endpoint.includes('://') || endpoint.includes('?')) {
+      throw new Error('Metricool endpoint must be a path without protocol or query string');
+    }
+
+    const normalized = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const allowed = METRICOOL_ALLOWED_READ_PREFIXES.some((prefix) => {
+      if (prefix.endsWith('/')) return normalized.startsWith(prefix);
+      return normalized === prefix || normalized.startsWith(`${prefix}/`);
+    });
+    if (!allowed) {
+      throw new Error(`Metricool endpoint is not allowed: ${normalized}`);
+    }
+    return normalized;
+  }
+
+  private requireMetricoolParam(value: string | undefined, name: string): void {
+    if (!value) throw new Error(`Metricool ${name} is required`);
+  }
+
+  private formatMetricoolError(error: unknown): Error {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<any>;
+      const status = axiosError.response?.status;
+      const detail = axiosError.response?.data;
+      const message = this.extractMetricoolErrorMessage(detail) || axiosError.message;
+      return new Error(`Metricool API Error${status ? ` (${status})` : ''}: ${message}`);
+    }
+    return error instanceof Error ? error : new Error(String(error));
+  }
+
+  private extractMetricoolErrorMessage(detail: unknown): string | undefined {
+    if (!detail) return undefined;
+    if (typeof detail === 'string') return detail;
+    if (typeof detail !== 'object') return undefined;
+
+    const payload = detail as Record<string, unknown>;
+    for (const key of ['message', 'detail', 'title', 'error']) {
+      const value = payload[key];
+      if (typeof value === 'string') return value;
+    }
+    return JSON.stringify(payload);
   }
 } 
